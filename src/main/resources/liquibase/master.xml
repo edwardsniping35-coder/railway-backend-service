@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.7.xsd">
+
+    <include file="changelog/20251005082800_create_initial_tables.xml" relativeToChangelogFile="true"/>
+    <include file="changelog/20251006082200_insert_core_authorities.xml" relativeToChangelogFile="true"/>
+    <include file="changelog/20251006085100_insert_sample_employee.xml" relativeToChangelogFile="true"/>
+    <include file="changelog/20251007160900_insert_sample_station_data.xml" relativeToChangelogFile="true"/>
+    <include file="changelog/20251009143700_insert_sample_route_data.xml" relativeToChangelogFile="true"/>
+    <include file="changelog/20251009215500_insert_sample_customer_parcel_data.xml" relativeToChangelogFile="true"/>
+
+</databaseChangeLog>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.7.xsd">
+
+    <changeSet id="1759719343-1" author="Janith Sandaruwan">
+        <comment>Insert core authorities</comment>
+
+        <insert tableName="authority">
+            <column name="name" value="Manage Parcels"/>
+            <column name="code" value="parcel:manage"/>
+            <column name="status" value="ACTIVE"/>
+        </insert>
+        <insert tableName="authority">
+            <column name="name" value="Read Parcels"/>
+            <column name="code" value="parcel:read"/>
+            <column name="status" value="ACTIVE"/>
+        </insert>
+        <insert tableName="authority">
+            <column name="name" value="Manage Users"/>
+            <column name="code" value="user:manage"/>
+            <column name="status" value="ACTIVE"/>
+        </insert>
+        <insert tableName="authority">
+            <column name="name" value="Manage Trains"/>
+            <column name="code" value="train:manage"/>
+            <column name="status" value="ACTIVE"/>
+        </insert>
+
+    </changeSet>
+
+</databaseChangeLog>

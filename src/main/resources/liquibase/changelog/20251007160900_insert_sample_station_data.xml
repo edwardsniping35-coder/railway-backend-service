@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.7.xsd">
+
+    <changeSet id="1759833705-1" author="Janith Sandaruwan">
+        <comment>Insert sample data for major railway stations in Sri Lanka</comment>
+
+        <insert tableName="station">
+            <column name="name" value="Colombo Fort"/>
+            <column name="code" value="FOT"/>
+            <column name="address" value="Colombo 01"/>
+            <column name="status" value="ACTIVE"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+
+        <insert tableName="station">
+            <column name="name" value="Kandy"/>
+            <column name="code" value="KAD"/>
+            <column name="address" value="Kandy"/>
+            <column name="status" value="ACTIVE"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+
+        <insert tableName="station">
+            <column name="name" value="Galle"/>
+            <column name="code" value="GLE"/>
+            <column name="address" value="Galle"/>
+            <column name="status" value="ACTIVE"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+
+        <insert tableName="station">
+            <column name="name" value="Badulla"/>
+            <column name="code" value="BDA"/>
+            <column name="address" value="Badulla"/>
+            <column name="status" value="ACTIVE"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+
+        <insert tableName="station">
+            <column name="name" value="Jaffna"/>
+            <column name="code" value="JAF"/>
+            <column name="address" value="Jaffna"/>
+            <column name="status" value="ACTIVE"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+
+    </changeSet>
+
+</databaseChangeLog>

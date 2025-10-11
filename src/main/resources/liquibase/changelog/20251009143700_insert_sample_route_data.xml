@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.7.xsd">
+
+    <changeSet id="1759881420-1" author="Janith Sandaruwan">
+        <comment>Insert sample data for trains</comment>
+
+        <insert tableName="train">
+            <column name="name" value="Ruhunu Kumari"/>
+            <column name="train_id" value="T-8050"/>
+            <column name="type" value="EXPRESS"/>
+            <column name="status" value="ACTIVE"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+        <insert tableName="train">
+            <column name="name" value="Udarata Menike"/>
+            <column name="train_id" value="T-1015"/>
+            <column name="type" value="EXPRESS"/>
+            <column name="status" value="ACTIVE"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+        <insert tableName="train">
+            <column name="name" value="Yal Devi"/>
+            <column name="train_id" value="T-4077"/>
+            <column name="type" value="INTERCITY"/>
+            <column name="status" value="ACTIVE"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="1759881420-2" author="Janith Sandaruwan">
+        <comment>Insert additional stations for the Main Line route</comment>
+
+        <insert tableName="station">
+            <column name="name" value="Nanu Oya"/>
+            <column name="code" value="NOA"/>
+            <column name="address" value="Nuwara Eliya"/>
+            <column name="status" value="ACTIVE"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+        <insert tableName="station">
+            <column name="name" value="Ella"/>
+            <column name="code" value="ELL"/>
+            <column name="address" value="Ella"/>
+            <column name="status" value="ACTIVE"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="1759881420-3" author="Janith Sandaruwan">
+        <comment>Insert sample route and stops for Coastal Line (Colombo -> Galle)</comment>
+
+        <sql>
+            -- Insert the main route record
+            INSERT INTO route (route_name, route_number, train_id, origin_station_id, destination_station_id, status, created_at)
+            VALUES (
+                       'Coastal Line Express',
+                       'R-CL-8050',
+                       (SELECT id FROM train WHERE train_id = 'T-8050'),
+                       (SELECT id FROM station WHERE code = 'FOT'),
+                       (SELECT id FROM station WHERE code = 'GLE'),
+                       'ACTIVE',
+                       CURRENT_TIMESTAMP
+                   );
+
+            -- Insert the stops for this route
+            -- Stop 1: Colombo Fort (Origin)
+            INSERT INTO route_stop (route_id, station_id, stop_order, scheduled_departure_time, distance_from_origin_km)
+            VALUES (
+                           (SELECT id FROM route WHERE route_number = 'R-CL-8050'),
+                           (SELECT id FROM station WHERE code = 'FOT'),
+                           1,
+                           '2025-10-10 06:30:00+05:30',
+                           0.0
+                   );
+
+            -- Stop 2: Galle (Destination)
+            INSERT INTO route_stop (route_id, station_id, stop_order, scheduled_arrival_time, distance_from_origin_km)
+            VALUES (
+                           (SELECT id FROM route WHERE route_number = 'R-CL-8050'),
+                           (SELECT id FROM station WHERE code = 'GLE'),
+                           2,
+                           '2025-10-10 09:00:00+05:30',
+                           116.0
+                   );
+        </sql>
+    </changeSet>
+
+    <changeSet id="1759881420-4" author="Janith Sandaruwan">
+        <comment>Insert sample route and stops for Main Line (Colombo -> Badulla)</comment>
+
+        <sql>
+            -- Insert the main route record
+            INSERT INTO route (route_name, route_number, train_id, origin_station_id, destination_station_id, status, created_at)
+            VALUES (
+                       'Main Line Express - Udarata Menike',
+                       'R-ML-1015',
+                       (SELECT id FROM train WHERE train_id = 'T-1015'),
+                       (SELECT id FROM station WHERE code = 'FOT'),
+                       (SELECT id FROM station WHERE code = 'BDA'),
+                       'ACTIVE',
+                       CURRENT_TIMESTAMP
+                   );
+
+            -- Insert the stops for this route
+            -- Stop 1: Colombo Fort (Origin)
+            INSERT INTO route_stop (route_id, station_id, stop_order, scheduled_departure_time, distance_from_origin_km)
+            VALUES (
+                           (SELECT id FROM route WHERE route_number = 'R-ML-1015'),
+                           (SELECT id FROM station WHERE code = 'FOT'),
+                           1,
+                           '2025-10-11 08:30:00+05:30',
+                           0.0
+                   );
+
+            -- Stop 2: Kandy
+            INSERT INTO route_stop (route_id, station_id, stop_order, scheduled_arrival_time, scheduled_departure_time, distance_from_origin_km)
+            VALUES (
+                           (SELECT id FROM route WHERE route_number = 'R-ML-1015'),
+                           (SELECT id FROM station WHERE code = 'KAD'),
+                           2,
+                           '2025-10-11 11:10:00+05:30',
+                           '2025-10-11 11:20:00+05:30',
+                           121.0
+                   );
+
+            -- Stop 3: Nanu Oya
+            INSERT INTO route_stop (route_id, station_id, stop_order, scheduled_arrival_time, scheduled_departure_time, distance_from_origin_km)
+            VALUES (
+                           (SELECT id FROM route WHERE route_number = 'R-ML-1015'),
+                           (SELECT id FROM station WHERE code = 'NOA'),
+                           3,
+                           '2025-10-11 14:45:00+05:30',
+                           '2025-10-11 14:55:00+05:30',
+                           194.0
+                   );
+
+            -- Stop 4: Ella
+            INSERT INTO route_stop (route_id, station_id, stop_order, scheduled_arrival_time, scheduled_departure_time, distance_from_origin_km)
+            VALUES (
+                           (SELECT id FROM route WHERE route_number = 'R-ML-1015'),
+                           (SELECT id FROM station WHERE code = 'ELL'),
+                           4,
+                           '2025-10-11 16:55:00+05:30',
+                           '2025-10-11 17:05:00+05:30',
+                           253.0
+                   );
+
+            -- Stop 5: Badulla (Destination)
+            INSERT INTO route_stop (route_id, station_id, stop_order, scheduled_arrival_time, distance_from_origin_km)
+            VALUES (
+                           (SELECT id FROM route WHERE route_number = 'R-ML-1015'),
+                           (SELECT id FROM station WHERE code = 'BDA'),
+                           5,
+                           '2025-10-11 18:00:00+05:30',
+                           293.0
+                   );
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.7.xsd">
+
+    <!-- This changeSet for ROLE_CUSTOMER and its authorities is correct and can remain. -->
+    <changeSet id="1759902900-1" author="Janith Sandaruwan">
+        <comment>Create a role for customers and assign read-only parcel authority</comment>
+        <insert tableName="role">
+            <column name="name" value="ROLE_CUSTOMER"/>
+            <column name="description" value="Customer who can send and track parcels."/>
+            <column name="status" value="ACTIVE"/>
+        </insert>
+        <sql>
+            INSERT INTO role_authorities (role_id, authority_id)
+            SELECT (SELECT id FROM role WHERE name = 'ROLE_CUSTOMER'),
+                   (SELECT id FROM authority WHERE code = 'parcel:read');
+        </sql>
+    </changeSet>
+
+    <!-- This changeSet for creating sample customers is correct and can remain. -->
+    <changeSet id="1759902900-2" author="Janith Sandaruwan">
+        <comment>Insert sample customers (users and profiles)</comment>
+        <insert tableName="app_user">
+            <column name="mobile_number" value="0770000001"/>
+            <column name="password" value="$2a$10$vo9uh7Dj88InjTEer4pdDO8ebLbK5OEYNTQAIRUfRGkHvETPkOWsK"/>
+            <column name="email" value="janith.p@email.com"/>
+            <column name="status" value="ACTIVE"/>
+            <column name="provider" value="LOCAL"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+        <insert tableName="app_user">
+            <column name="mobile_number" value="0710000002"/>
+            <column name="password" value="$2a$10$vo9uh7Dj88InjTEer4pdDO8ebLbK5OEYNTQAIRUfRGkHvETPkOWsK"/>
+            <column name="email" value="fathima.r@email.com"/>
+            <column name="status" value="ACTIVE"/>
+            <column name="provider" value="LOCAL"/>
+            <column name="created_at" valueComputed="CURRENT_TIMESTAMP"/>
+        </insert>
+        <sql>
+            INSERT INTO user_roles (user_id, role_id)
+            SELECT (SELECT id FROM app_user WHERE mobile_number = '0770000001'),
+                   (SELECT id FROM role WHERE name = 'ROLE_CUSTOMER');
+            INSERT INTO customer_profile (user_id, first_name, last_name, address, city, created_at)
+            SELECT (SELECT id FROM app_user WHERE mobile_number = '0770000001'),
+                   'Janith',
+                   'Perera',
+                   '123 Galle Road',
+                   'Colombo',
+                   CURRENT_TIMESTAMP;
+            INSERT INTO user_roles (user_id, role_id)
+            SELECT (SELECT id FROM app_user WHERE mobile_number = '0710000002'),
+                   (SELECT id FROM role WHERE name = 'ROLE_CUSTOMER');
+            INSERT INTO customer_profile (user_id, first_name, last_name, address, city, created_at)
+            SELECT (SELECT id FROM app_user WHERE mobile_number = '0710000002'),
+                   'Fathima',
+                   'Riyas',
+                   '45 Lake Round',
+                   'Kandy',
+                   CURRENT_TIMESTAMP;
+        </sql>
+    </changeSet>
+
+    <changeSet id="1759902900-3-refactored" author="Janith Sandaruwan">
+        <comment>Insert sample parcel and parcel_item data according to the new schema</comment>
+
+        <sql>
+            -- Parcel 1: Colombo to Galle, In Transit
+            INSERT INTO parcel (tracking_id, origin_station_id, destination_station_id, sender_user_id,
+                                processed_by_user_id, receiver_name, receiver_phone, total_weight_in_kg, total_price,
+                                description, status, created_at)
+            VALUES ('SLR-20251009-001',
+                    (SELECT id FROM station WHERE code = 'FOT'),
+                    (SELECT id FROM station WHERE code = 'GLE'),
+                    (SELECT id FROM app_user WHERE mobile_number = '0770000001'),
+                    (SELECT user_id FROM employee_profile WHERE employee_id = 'SLR-CLK-002'),
+                    'Kavitha Silva',
+                    '0765554321',
+                    3.0, -- Total weight: 2.5 + 0.5
+                    600.00, -- Total price: 450 + 150
+                    'Electronics and Documents',
+                    'IN_TRANSIT',
+                    CURRENT_TIMESTAMP);
+
+            -- Items for Parcel 1
+            INSERT INTO parcel_item (parcel_id, type, category, weight_in_kg, quantity, fee, created_at)
+            VALUES ((SELECT id FROM parcel WHERE tracking_id = 'SLR-20251009-001'), 'Laptop', 'ELECTRONICS', 2.5, 1,
+                    450.00, CURRENT_TIMESTAMP),
+                   ((SELECT id FROM parcel WHERE tracking_id = 'SLR-20251009-001'), 'Book', 'OTHER', 0.5, 1, 150.00,
+                    CURRENT_TIMESTAMP);
+
+
+            -- Parcel 2: Kandy to Jaffna, Delivered
+            INSERT INTO parcel (tracking_id, origin_station_id, destination_station_id, sender_user_id,
+                                processed_by_user_id, receiver_name, receiver_phone, total_weight_in_kg, total_price,
+                                description, status, created_at)
+            VALUES ('SLR-20251009-002',
+                    (SELECT id FROM station WHERE code = 'KAD'),
+                    (SELECT id FROM station WHERE code = 'JAF'),
+                    (SELECT id FROM app_user WHERE mobile_number = '0710000002'),
+                    (SELECT user_id FROM employee_profile WHERE employee_id = 'SLR-CLK-002'),
+                    'Arun Kumar',
+                    '0751112233',
+                    0.5,
+                    200.00,
+                    'Official Documents',
+                    'DELIVERED',
+                    CURRENT_TIMESTAMP - INTERVAL '2 day');
+
+            -- Item for Parcel 2
+            INSERT INTO parcel_item (parcel_id, type, category, weight_in_kg, quantity, fee, created_at)
+            VALUES ((SELECT id FROM parcel WHERE tracking_id = 'SLR-20251009-002'), 'Legal Documents', 'DOCUMENTS', 0.5,
+                    1, 200.00, CURRENT_TIMESTAMP - INTERVAL '2 day');
+
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

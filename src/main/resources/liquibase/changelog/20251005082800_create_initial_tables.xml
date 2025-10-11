@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.7.xsd">
+
+    <changeSet id="1759633173-1" author="Janith Sandaruwan">
+        <comment>Create core independent tables: station, train, authority, role, and the new app_user</comment>
+
+        <createTable tableName="station">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="code" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="address" type="VARCHAR(500)"/>
+            <column name="status" type="VARCHAR(50)"/>
+            <column name="created_user_id" type="BIGINT"/>
+            <column name="last_modified_user_id" type="BIGINT"/>
+            <column name="created_at" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="last_modified_at" type="TIMESTAMP WITH TIME ZONE"/>
+        </createTable>
+
+        <createTable tableName="train">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="train_id" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="type" type="VARCHAR(50)"/>
+            <column name="status" type="VARCHAR(50)"/>
+            <column name="created_user_id" type="BIGINT"/>
+            <column name="last_modified_user_id" type="BIGINT"/>
+            <column name="created_at" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="last_modified_at" type="TIMESTAMP WITH TIME ZONE"/>
+        </createTable>
+
+        <createTable tableName="authority">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="code" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="status" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_user_id" type="BIGINT"/>
+            <column name="last_modified_user_id" type="BIGINT"/>
+            <column name="created_at" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="last_modified_at" type="TIMESTAMP WITH TIME ZONE"/>
+        </createTable>
+
+        <createTable tableName="role">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="status" type="VARCHAR(50)"/>
+            <column name="created_user_id" type="BIGINT"/>
+            <column name="last_modified_user_id" type="BIGINT"/>
+            <column name="created_at" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="last_modified_at" type="TIMESTAMP WITH TIME ZONE"/>
+        </createTable>
+
+        <createTable tableName="app_user">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="mobile_number" type="VARCHAR(15)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(255)">
+                <constraints unique="true"/>
+            </column>
+            <column name="status" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="provider" type="VARCHAR(50)"/>
+            <column name="failed_login_attempt_count" type="INT"/>
+            <column name="last_failed_login_date" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="last_login_date" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="created_user_id" type="BIGINT"/>
+            <column name="last_modified_user_id" type="BIGINT"/>
+            <column name="created_at" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="last_modified_at" type="TIMESTAMP WITH TIME ZONE"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1759633173-2" author="Janith Sandaruwan">
+        <comment>Create profile tables, relational tables, and join tables</comment>
+
+        <createTable tableName="employee_profile">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="employee_id" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="first_name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="nic_number" type="VARCHAR(15)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="assigned_station_id" type="BIGINT"/>
+            <column name="created_user_id" type="BIGINT"/>
+            <column name="last_modified_user_id" type="BIGINT"/>
+            <column name="created_at" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="last_modified_at" type="TIMESTAMP WITH TIME ZONE"/>
+        </createTable>
+
+        <createTable tableName="customer_profile">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="first_name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address" type="VARCHAR(500)"/>
+            <column name="city" type="VARCHAR(100)"/>
+            <column name="created_user_id" type="BIGINT"/>
+            <column name="last_modified_user_id" type="BIGINT"/>
+            <column name="created_at" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="last_modified_at" type="TIMESTAMP WITH TIME ZONE"/>
+        </createTable>
+
+        <createTable tableName="route">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="route_name" type="VARCHAR(150)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="route_number" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="train_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="origin_station_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="destination_station_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_user_id" type="BIGINT"/>
+            <column name="last_modified_user_id" type="BIGINT"/>
+            <column name="created_at" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="last_modified_at" type="TIMESTAMP WITH TIME ZONE"/>
+        </createTable>
+
+        <createTable tableName="route_stop">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="route_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="station_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="stop_order" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="scheduled_arrival_time" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="scheduled_departure_time" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="distance_from_origin_km" type="DOUBLE PRECISION"/>
+        </createTable>
+
+        <createTable tableName="parcel">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="tracking_id" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="origin_station_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="destination_station_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="processed_by_user_id" type="BIGINT"/>
+            <column name="sender_user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="receiver_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="receiver_phone" type="VARCHAR(15)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="train_id" type="BIGINT"/>
+            <column name="total_weight_in_kg" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_price" type="DECIMAL(19, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="TEXT"/>
+            <column name="status" type="VARCHAR(50)"/>
+            <column name="created_user_id" type="BIGINT"/>
+            <column name="last_modified_user_id" type="BIGINT"/>
+            <column name="created_at" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="last_modified_at" type="TIMESTAMP WITH TIME ZONE"/>
+        </createTable>
+
+        <createTable tableName="parcel_item">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="parcel_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category" type="VARCHAR(255)"/>
+            <column name="weight_in_kg" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="fee" type="DECIMAL(19, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_user_id" type="BIGINT"/>
+            <column name="last_modified_user_id" type="BIGINT"/>
+            <column name="created_at" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="last_modified_at" type="TIMESTAMP WITH TIME ZONE"/>
+        </createTable>
+
+        <createTable tableName="user_roles">
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="role_authorities">
+            <column name="role_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="authority_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1759633173-3" author="Janith Sandaruwan">
+        <comment>Add foreign key constraints to all tables for the unified model</comment>
+
+        <addForeignKeyConstraint baseTableName="employee_profile" baseColumnNames="user_id"
+                                 constraintName="fk_employee_profile_user"
+                                 referencedTableName="app_user" referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="employee_profile" baseColumnNames="assigned_station_id"
+                                 constraintName="fk_employee_profile_station"
+                                 referencedTableName="station" referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="customer_profile" baseColumnNames="user_id"
+                                 constraintName="fk_customer_profile_user"
+                                 referencedTableName="app_user" referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="route" baseColumnNames="train_id"
+                                 constraintName="fk_route_train"
+                                 referencedTableName="train" referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="route" baseColumnNames="origin_station_id"
+                                 constraintName="fk_route_origin_station"
+                                 referencedTableName="station" referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="route" baseColumnNames="destination_station_id"
+                                 constraintName="fk_route_destination_station"
+                                 referencedTableName="station" referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="route_stop" baseColumnNames="route_id"
+                                 constraintName="fk_routestop_route"
+                                 referencedTableName="route" referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="route_stop" baseColumnNames="station_id"
+                                 constraintName="fk_routestop_station"
+                                 referencedTableName="station" referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="parcel" baseColumnNames="origin_station_id"
+                                 constraintName="fk_parcel_origin_station"
+                                 referencedTableName="station" referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="parcel" baseColumnNames="destination_station_id"
+                                 constraintName="fk_parcel_destination_station"
+                                 referencedTableName="station" referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="parcel" baseColumnNames="processed_by_user_id"
+                                 constraintName="fk_parcel_processed_by_user"
+                                 referencedTableName="app_user" referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="parcel" baseColumnNames="sender_user_id"
+                                 constraintName="fk_parcel_sender_user"
+                                 referencedTableName="app_user" referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="parcel" baseColumnNames="train_id"
+                                 constraintName="fk_parcel_train"
+                                 referencedTableName="train" referencedColumnNames="id"/>
+
+        <addPrimaryKey tableName="user_roles" columnNames="user_id, role_id" constraintName="pk_user_roles"/>
+        <addForeignKeyConstraint baseTableName="user_roles" baseColumnNames="user_id"
+                                 constraintName="fk_userroles_user"
+                                 referencedTableName="app_user" referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="user_roles" baseColumnNames="role_id"
+                                 constraintName="fk_userroles_role"
+                                 referencedTableName="role" referencedColumnNames="id"/>
+
+        <addPrimaryKey tableName="role_authorities" columnNames="role_id, authority_id" constraintName="pk_role_authorities"/>
+        <addForeignKeyConstraint baseTableName="role_authorities" baseColumnNames="role_id"
+                                 constraintName="fk_roleauthorities_role"
+                                 referencedTableName="role" referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="role_authorities" baseColumnNames="authority_id"
+                                 constraintName="fk_roleauthorities_authority"
+                                 referencedTableName="authority" referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="parcel_item" baseColumnNames="parcel_id"
+                                 constraintName="fk_parcelitem_parcel"
+                                 referencedTableName="parcel" referencedColumnNames="id"/>
+
+    </changeSet>
+
+</databaseChangeLog>
